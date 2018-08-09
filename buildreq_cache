@@ -1,0 +1,7 @@
+0.3.3
+oslo.concurrency
+netifaces
+oslo.i18n
+oslo.log
+paramiko
+oslotest
