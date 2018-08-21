@@ -1,7 +1,7 @@
-0.3.3
-oslo.concurrency
+0.3.4
 netifaces
+oslo.concurrency
 oslo.i18n
 oslo.log
-paramiko
 oslotest
+paramiko

@@ -1,6 +1,16 @@
 CHANGES
 =======
 
+0.3.4
+-----
+
+* os-xenapi: change dom0 uuid get function
+* os-xenapi: add utility to setup guest VM logs
+* Replace file() with open() for Python 3 compatibility
+* Change neutron firewall driver to ovs
+* Remove the restriction that SR must be FS based SR
+* uncap eventlet
+
 0.3.3
 -----
 
