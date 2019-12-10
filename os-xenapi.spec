@@ -4,16 +4,16 @@
 #
 Name     : os-xenapi
 Version  : 0.3.4
-Release  : 7
+Release  : 8
 URL      : https://files.pythonhosted.org/packages/ed/af/8fa74f2545518ba725992765a63b2d8cf507b12867380e8f701c44e47587/os-xenapi-0.3.4.tar.gz
 Source0  : https://files.pythonhosted.org/packages/ed/af/8fa74f2545518ba725992765a63b2d8cf507b12867380e8f701c44e47587/os-xenapi-0.3.4.tar.gz
 Summary  : XenAPI library for OpenStack projects
 Group    : Development/Tools
 License  : Apache-2.0
-Requires: os-xenapi-bin
-Requires: os-xenapi-python3
-Requires: os-xenapi-license
-Requires: os-xenapi-python
+Requires: os-xenapi-bin = %{version}-%{release}
+Requires: os-xenapi-license = %{version}-%{release}
+Requires: os-xenapi-python = %{version}-%{release}
+Requires: os-xenapi-python3 = %{version}-%{release}
 Requires: Babel
 Requires: eventlet
 Requires: oslo.concurrency
@@ -23,17 +23,24 @@ Requires: oslo.utils
 Requires: paramiko
 Requires: pbr
 Requires: six
+BuildRequires : Babel
 BuildRequires : buildreq-distutils3
+BuildRequires : eventlet
 BuildRequires : netifaces
 BuildRequires : oslo.concurrency
 BuildRequires : oslo.i18n
 BuildRequires : oslo.log
+BuildRequires : oslo.utils
 BuildRequires : oslotest
 BuildRequires : paramiko
 BuildRequires : pbr
 BuildRequires : pluggy
 BuildRequires : py-python
 BuildRequires : pytest
+BuildRequires : reno-python
+BuildRequires : six
+BuildRequires : testrepository
+BuildRequires : testrepository-python
 BuildRequires : tox
 BuildRequires : virtualenv
 
@@ -49,7 +56,7 @@ os-xenapi
 %package bin
 Summary: bin components for the os-xenapi package.
 Group: Binaries
-Requires: os-xenapi-license
+Requires: os-xenapi-license = %{version}-%{release}
 
 %description bin
 bin components for the os-xenapi package.
@@ -66,7 +73,7 @@ license components for the os-xenapi package.
 %package python
 Summary: python components for the os-xenapi package.
 Group: Default
-Requires: os-xenapi-python3
+Requires: os-xenapi-python3 = %{version}-%{release}
 
 %description python
 python components for the os-xenapi package.
@@ -83,25 +90,33 @@ python3 components for the os-xenapi package.
 
 %prep
 %setup -q -n os-xenapi-0.3.4
+cd %{_builddir}/os-xenapi-0.3.4
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1534889711
-python3 setup.py build -b py3
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1576012328
+export GCC_IGNORE_WERROR=1
+export CFLAGS="$CFLAGS -fno-lto "
+export FCFLAGS="$CFLAGS -fno-lto "
+export FFLAGS="$CFLAGS -fno-lto "
+export CXXFLAGS="$CXXFLAGS -fno-lto "
+export MAKEFLAGS=%{?_smp_mflags}
+python3 setup.py build
 
 %check
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-PYTHONPATH=%{buildroot}/usr/lib/python3.7/site-packages python3 setup.py test || :
+PYTHONPATH=%{buildroot}$(python -c "import sys; print(sys.path[-1])") python setup.py test || :
 %install
+export MAKEFLAGS=%{?_smp_mflags}
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/os-xenapi
-cp LICENSE %{buildroot}/usr/share/doc/os-xenapi/LICENSE
-python3 -tt setup.py build -b py3 install --root=%{buildroot}
+mkdir -p %{buildroot}/usr/share/package-licenses/os-xenapi
+cp %{_builddir}/os-xenapi-0.3.4/LICENSE %{buildroot}/usr/share/package-licenses/os-xenapi/294b43b2cec9919063be1a3b49e8722648424779
+python3 -tt setup.py build  install --root=%{buildroot}
 echo ----[ mark ]----
 cat %{buildroot}/usr/lib/python3*/site-packages/*/requires.txt || :
 echo ----[ mark ]----
@@ -114,8 +129,8 @@ echo ----[ mark ]----
 /usr/bin/xenapi_bootstrap
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/os-xenapi/LICENSE
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/os-xenapi/294b43b2cec9919063be1a3b49e8722648424779
 
 %files python
 %defattr(-,root,root,-)
