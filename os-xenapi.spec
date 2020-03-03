@@ -4,7 +4,7 @@
 #
 Name     : os-xenapi
 Version  : 0.3.4
-Release  : 9
+Release  : 10
 URL      : https://files.pythonhosted.org/packages/ed/af/8fa74f2545518ba725992765a63b2d8cf507b12867380e8f701c44e47587/os-xenapi-0.3.4.tar.gz
 Source0  : https://files.pythonhosted.org/packages/ed/af/8fa74f2545518ba725992765a63b2d8cf507b12867380e8f701c44e47587/os-xenapi-0.3.4.tar.gz
 Summary  : XenAPI library for OpenStack projects
@@ -45,13 +45,7 @@ BuildRequires : tox
 BuildRequires : virtualenv
 
 %description
-os-xenapi
-        =========
-        
-        XenAPI library for OpenStack projects
-        
-        This library provides the support functions needed to connect to and manage a XenAPI-based
-        hypervisor, such as Citrix's XenServer.
+This package contains files that are required for XenAPI support for OpenStack.
 
 %package bin
 Summary: bin components for the os-xenapi package.
@@ -83,6 +77,7 @@ python components for the os-xenapi package.
 Summary: python3 components for the os-xenapi package.
 Group: Default
 Requires: python3-core
+Provides: pypi(os-xenapi)
 
 %description python3
 python3 components for the os-xenapi package.
@@ -97,7 +92,8 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1576012328
+export SOURCE_DATE_EPOCH=1583196034
+# -Werror is for werrorists
 export GCC_IGNORE_WERROR=1
 export CFLAGS="$CFLAGS -fno-lto "
 export FCFLAGS="$CFLAGS -fno-lto "
